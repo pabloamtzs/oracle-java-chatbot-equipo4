@@ -3,13 +3,15 @@ Repositorio del proyecto Oracle Java Chatbot del Equipo 4 para la materia de Des
 
 Actividad de Aprendizaje 2: Siguiendo los lineamientos que hemos estado trabajando a lo largo del semestre con el proyecto del reto y las tecnologías que nos han dado a estudiar y trabajar “workshops”, llegué a los siguientes puntos de trabajo y componentes principales:
 
-# Backend:
+## Requerimientos del proyecto:
+
+Backend:
 
 - **Lenguaje de programación:** Java.
 - **Framework de desarrollo:** Spring Boot.
 - **Base de datos:** Oracle Autonomous Database.
 
-# Frontend:
+Frontend:
 
 - **Integración con Telegram API.**
 - **Framework web para la interfaz de administración:** Angular o React.
