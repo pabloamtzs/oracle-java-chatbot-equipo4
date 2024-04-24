@@ -5,13 +5,13 @@ Actividad de Aprendizaje 2: Siguiendo los lineamientos que hemos estado trabajan
 
 ## Requerimientos del proyecto:
 
-Backend:
+### Backend:
 
 - **Lenguaje de programación:** Java.
 - **Framework de desarrollo:** Spring Boot.
 - **Base de datos:** Oracle Autonomous Database.
 
-Frontend:
+### Frontend:
 
 - **Integración con Telegram API.**
 - **Framework web para la interfaz de administración:** Angular o React.
