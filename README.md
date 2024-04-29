@@ -5,7 +5,7 @@ En el equipo de trabajo de software de Oracle se ha decidido implementar un soft
 
 Texto Añadido por Cesar Y así cosas para la actividad. I guess I'm just a worrier. That's why they call me Whiskers
 
-Texto añadido por Pablo. La estrategia que usaremos de bracnhing es la de feature branching.
+Texto añadido por Pablo. La estrategia que usaremos de branching es la de feature branching.
 
 
 ## Actividad de Aprendizaje 2 
