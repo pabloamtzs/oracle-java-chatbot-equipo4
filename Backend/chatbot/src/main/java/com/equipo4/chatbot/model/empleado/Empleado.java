@@ -1,4 +1,4 @@
-package com.equipo4.chatbot.model;
+package com.equipo4.chatbot.model.empleado;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
