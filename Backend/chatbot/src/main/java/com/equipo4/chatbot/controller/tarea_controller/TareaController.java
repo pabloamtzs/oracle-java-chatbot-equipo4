@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.equipo4.chatbot.model.tarea.Tarea;
 import com.equipo4.chatbot.service.tarea_service.TareaService;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/tarea")
 public class TareaController {
 
