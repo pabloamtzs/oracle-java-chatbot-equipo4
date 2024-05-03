@@ -28,7 +28,7 @@ public class TareaService {
     }
 
     public ResponseEntity<Tarea> addTarea(Tarea tarea) {
-        tarea.setEstado("Pendiente"); // Por defecto, el estado de la tarea es Pendiente, ya que no se especifica en el formulario de creación de tareas
+        tarea.setEstado("Pendiente");
         Tarea savedTarea = tareaRepository.save(tarea);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTarea);
     }
@@ -36,26 +36,13 @@ public class TareaService {
     public ResponseEntity<Tarea> updateTarea(Tarea tarea, Long id_Tarea) {
         Optional<Tarea> data = tareaRepository.findById(id_Tarea);
         return data.map(_tarea -> {
-            _tarea.setDescripcion_Tarea(tarea.getDescripcion_Tarea());
+            _tarea.setDescripcion_tarea(tarea.getDescripcion_tarea());
             _tarea.setEstado(tarea.getEstado());
-            _tarea.setSprint(tarea.getSprint());
+            _tarea.setId_sprint(tarea.getId_sprint());
             Tarea updatedTarea = tareaRepository.save(_tarea);
             return ResponseEntity.ok(updatedTarea);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-    //xd
-    public ResponseEntity<Tarea> updateTarea(Long id_Tarea, Tarea tarea) {
-        Optional<Tarea> data = tareaRepository.findById(id_Tarea);
-        return data.map(_tarea -> {
-            _tarea.setDescripcion_Tarea(tarea.getDescripcion_Tarea());
-            _tarea.setEstado(tarea.getEstado());
-            _tarea.setSprint(tarea.getSprint());
-            Tarea updatedTarea = tareaRepository.save(_tarea);
-            return ResponseEntity.ok(updatedTarea);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
 
     public boolean deleteTareaById(long id){
         try{

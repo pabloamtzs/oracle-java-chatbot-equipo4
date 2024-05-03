@@ -16,19 +16,19 @@ import lombok.NoArgsConstructor;
 public class Sprint {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_SPRINT", updatable = false, nullable = false)
-    private Long ID_Sprint;
+    private Long id_sprint;
 
     @Column(name = "NOMBRE")
-    private String Nombre;
+    private String nombre;
 
     @Column(name = "FECHA_INICIO")
-    private LocalTime Hora_Entrada;
+    private LocalTime fecha_inicio;
 
     @Column(name = "FECHA_FINAL")
-    private LocalTime Hora_Salida;
+    private LocalTime fecha_final;
 
     @Column(name = "ID_PROYECTO")
-    private Long proyecto;
+    private Long id_proyecto;
 }

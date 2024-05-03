@@ -36,9 +36,9 @@ public class SprintService {
         Optional<Sprint> data = sprintRepository.findById(id_Sprint);
         return data.map(_sprint -> {
             _sprint.setNombre(sprint.getNombre());
-            _sprint.setHora_Entrada(sprint.getHora_Entrada());
-            _sprint.setHora_Salida(sprint.getHora_Salida());
-            _sprint.setProyecto(sprint.getProyecto());
+            _sprint.setFecha_inicio(sprint.getFecha_inicio());
+            _sprint.setFecha_final(sprint.getFecha_final());
+            _sprint.setId_proyecto(sprint.getId_proyecto());
             Sprint updatedSprint = sprintRepository.save(_sprint);
             return ResponseEntity.ok(updatedSprint);
         }).orElseGet(() -> ResponseEntity.notFound().build());

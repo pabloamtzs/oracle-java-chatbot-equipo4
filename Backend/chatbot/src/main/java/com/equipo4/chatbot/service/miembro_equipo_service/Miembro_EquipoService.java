@@ -58,10 +58,14 @@ public class Miembro_EquipoService{
 
     public ResponseEntity<Miembro_Equipo> updateMiembroEquipo(Long idMiembro, Long idEquipo, Miembro_Equipo miembroEquipo) {
         Optional<Miembro_Equipo> data = miembro_EquipoRepository.findById(new ID_Miembro_Equipo(idMiembro, idEquipo));
-        return data.map(_miembroEquipo -> {
-            Miembro_Equipo updatedMiembroEquipo = miembro_EquipoRepository.save(_miembroEquipo);
-            return ResponseEntity.ok(updatedMiembroEquipo);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        if (data.isPresent()) {
+            miembro_EquipoRepository.delete(data.get());
+            Miembro_Equipo newMiembroEquipo = new Miembro_Equipo(new ID_Miembro_Equipo(miembroEquipo.getId().getId_miembro(), miembroEquipo.getId().getId_equipo()));
+            Miembro_Equipo savedMiembroEquipo = miembro_EquipoRepository.save(newMiembroEquipo);
+            return ResponseEntity.ok(savedMiembroEquipo);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     public ResponseEntity<Boolean> deleteMiembroEquipoById(Long idMiembro, Long idEquipo) {

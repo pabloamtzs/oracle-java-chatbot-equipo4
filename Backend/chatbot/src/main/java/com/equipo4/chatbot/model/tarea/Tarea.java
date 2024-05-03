@@ -16,45 +16,20 @@ import lombok.NoArgsConstructor;
 public class Tarea {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_TAREA", updatable = false, nullable = false)
-    private Long ID_Tarea;
+    private Long id_tarea;
 
     @Column(name = "DESCRIPCION_TAREA")
-    private String Descripcion_Tarea;
+    private String descripcion_tarea;
 
     @Column(name = "ESTADO")
-    private String Estado;
+    private String estado;
 
     @Column(name = "ID_SPRINT")
-    private Long sprint;
-    
-    public Long getID() {
-        return ID_Tarea;
-    }
+    private Long id_sprint;
 
-    public void setID(Long ID) {
-        this.ID_Tarea = ID;
-    }
-
-    public String getDescription() {
-        return Descripcion_Tarea;
-    }
-
-    public void setDescription(String Descripcion_Tarea) {
-        this.Descripcion_Tarea = Descripcion_Tarea;
-    }
-
-    public String getEstado() {
-        return Estado;
-    }
-
-    public void setDone(String Estado) {
-        this.Estado = Estado;
-    }
-    
     public boolean isDone() {
-        return Estado.equals("DONE");
+        return estado.equals("Hecho");
     }
-
 }

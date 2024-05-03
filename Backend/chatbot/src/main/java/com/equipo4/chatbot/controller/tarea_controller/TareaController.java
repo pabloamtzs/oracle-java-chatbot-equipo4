@@ -34,7 +34,7 @@ public class TareaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Tarea> updateTarea(@RequestBody Tarea tarea, @PathVariable long id) {
-        return tareaService.updateTarea(id, tarea);
+        return tareaService.updateTarea(tarea, id);
     }
 
     @DeleteMapping("/{id}")

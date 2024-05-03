@@ -58,10 +58,14 @@ public class Empleado_TareaService{
 
     public ResponseEntity<Empleado_Tarea> updateEmpleadoTarea(Long idEmpleado, Long idTarea, Empleado_Tarea empleadoTarea) {
         Optional<Empleado_Tarea> data = empleado_TareaRepository.findById(new ID_Empleado_Tarea(idEmpleado, idTarea));
-        return data.map(_empleadoTarea -> {
-            Empleado_Tarea updatedEmpleadoTarea = empleado_TareaRepository.save(_empleadoTarea);
-            return ResponseEntity.ok(updatedEmpleadoTarea);
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        if (data.isPresent()) {
+            empleado_TareaRepository.delete(data.get());
+            Empleado_Tarea newEmpleadoTarea = new Empleado_Tarea(new ID_Empleado_Tarea(empleadoTarea.getId().getId_empleado(), empleadoTarea.getId().getId_tarea()));
+            Empleado_Tarea savedEmpleadoTarea = empleado_TareaRepository.save(newEmpleadoTarea);
+            return ResponseEntity.ok(savedEmpleadoTarea);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     public ResponseEntity<Boolean> deleteEmpleadoTareaById(Long idEmpleado, Long idTarea) {
