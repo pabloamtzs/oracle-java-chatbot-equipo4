@@ -28,7 +28,7 @@ public class TareaService {
     }
 
     public ResponseEntity<Tarea> addTarea(Tarea tarea) {
-        tarea.setEstado("Not Assigned");
+        tarea.setEstado("Pendiente");
         Tarea savedTarea = tareaRepository.save(tarea);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTarea);
     }
@@ -44,12 +44,12 @@ public class TareaService {
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    public ResponseEntity<Boolean> deleteTareaById(Long id_tarea) {
-        try {
-            tareaRepository.deleteById(id_tarea);
-            return ResponseEntity.ok(true);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+    public boolean deleteTareaById(long id){
+        try{
+            tareaRepository.deleteById(id);
+            return true;
+        }catch(Exception e){
+            return false;
         }
     }
 }

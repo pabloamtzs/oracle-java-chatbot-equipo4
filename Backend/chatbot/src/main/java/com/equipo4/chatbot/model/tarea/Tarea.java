@@ -29,4 +29,7 @@ public class Tarea {
     @Column(name = "ID_SPRINT")
     private Long id_sprint;
 
+    public boolean isDone() {
+        return estado.equals("Hecho");
+    }
 }
