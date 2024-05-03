@@ -1,4 +1,4 @@
-package com.equipo4.chatbot.service;
+package com.equipo4.chatbot.service.empleado_service;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.equipo4.chatbot.model.Empleado;
-import com.equipo4.chatbot.repository.EmpleadoRepository;
+import com.equipo4.chatbot.model.empleado.Empleado;
+import com.equipo4.chatbot.repository.empleado_repository.EmpleadoRepository;
 
 @Service
 public class EmpleadoService {

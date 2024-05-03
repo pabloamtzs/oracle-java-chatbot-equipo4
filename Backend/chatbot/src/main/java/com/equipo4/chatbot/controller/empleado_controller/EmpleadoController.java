@@ -1,4 +1,4 @@
-package com.equipo4.chatbot.controller;
+package com.equipo4.chatbot.controller.empleado_controller;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.equipo4.chatbot.model.Empleado;
-import com.equipo4.chatbot.service.EmpleadoService;
+import com.equipo4.chatbot.model.empleado.Empleado;
+import com.equipo4.chatbot.service.empleado_service.EmpleadoService;
 
 
 @RestController
