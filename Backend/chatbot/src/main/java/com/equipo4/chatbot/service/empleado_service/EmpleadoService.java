@@ -41,8 +41,8 @@ public class EmpleadoService {
             _empleado.setPosicion(empleado.getPosicion());
             _empleado.setEmail(empleado.getEmail());
             _empleado.setContrasena(empleado.getContrasena());
-            _empleado.setHora_Entrada(empleado.getHora_Entrada());
-            _empleado.setHora_Salida(empleado.getHora_Salida());
+            _empleado.setHora_entrada(empleado.getHora_entrada());
+            _empleado.setHora_salida(empleado.getHora_salida());
             _empleado.setSalario(empleado.getSalario());
             Empleado updatedEmpleado = empleadoRepository.save(_empleado);
             return ResponseEntity.ok(updatedEmpleado);

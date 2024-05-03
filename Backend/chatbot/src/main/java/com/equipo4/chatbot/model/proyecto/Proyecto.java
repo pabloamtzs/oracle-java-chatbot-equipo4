@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 public class Proyecto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_PROYECTO", updatable = false, nullable = false)
-    private Long ID_Proyecto;
+    private Long id_proyecto;
 
     @Column(name = "NOMBRE")
-    private String Nombre;
+    private String nombre;
 
     @Column(name = "ID_EQUIPO")
-    private Long equipo;
+    private Long id_equipo;
 }

@@ -10,7 +10,7 @@ import com.equipo4.chatbot.service.empleado_tarea_service.Empleado_TareaService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/equipo-tarea")
+@RequestMapping("/api/empleado-tarea")
 public class Empleado_TareaController {
 
     @Autowired

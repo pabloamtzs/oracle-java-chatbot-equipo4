@@ -36,14 +36,13 @@ public class EquipoService {
     public ResponseEntity<Equipo> updateEquipo(Equipo equipo, Long id_equipo) {
         Optional<Equipo> data = equipoRepository.findById(id_equipo);
         return data.map(_equipo -> {
-            _equipo.setNombre_Equipo(equipo.getNombre_Equipo());
-            _equipo.setManager(equipo.getManager());
+            _equipo.setNombre_equipo(equipo.getNombre_equipo());
+            _equipo.setId_lider(equipo.getId_lider());
             Equipo updatedEquipo = equipoRepository.save(_equipo);
             return ResponseEntity.ok(updatedEquipo);
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
     
-
     public ResponseEntity<Boolean> deleteEquipoById(Long id_equipo) {
         try {
             equipoRepository.deleteById(id_equipo);

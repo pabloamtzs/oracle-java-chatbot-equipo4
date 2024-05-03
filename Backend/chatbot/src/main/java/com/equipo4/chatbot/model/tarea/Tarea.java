@@ -16,17 +16,17 @@ import lombok.NoArgsConstructor;
 public class Tarea {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_TAREA", updatable = false, nullable = false)
-    private Long ID_Tarea;
+    private Long id_tarea;
 
     @Column(name = "DESCRIPCION_TAREA")
-    private String Descripcion_Tarea;
+    private String descripcion_tarea;
 
     @Column(name = "ESTADO")
-    private String Estado;
+    private String estado;
 
     @Column(name = "ID_SPRINT")
-    private Long sprint;
+    private Long id_sprint;
 
 }
