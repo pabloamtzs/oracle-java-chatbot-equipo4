@@ -28,5 +28,33 @@ public class Tarea {
 
     @Column(name = "ID_SPRINT")
     private Long sprint;
+    
+    public Long getID() {
+        return ID_Tarea;
+    }
+
+    public void setID(Long ID) {
+        this.ID_Tarea = ID;
+    }
+
+    public String getDescription() {
+        return Descripcion_Tarea;
+    }
+
+    public void setDescription(String Descripcion_Tarea) {
+        this.Descripcion_Tarea = Descripcion_Tarea;
+    }
+
+    public String getEstado() {
+        return Estado;
+    }
+
+    public void setDone(String Estado) {
+        this.Estado = Estado;
+    }
+    
+    public boolean isDone() {
+        return Estado.equals("DONE");
+    }
 
 }

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.equipo4.chatbot.model.tarea.Tarea;
 import com.equipo4.chatbot.service.tarea_service.TareaService;
 
-
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/tarea")
 public class TareaController {
 
@@ -34,11 +34,11 @@ public class TareaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Tarea> updateTarea(@RequestBody Tarea tarea, @PathVariable long id) {
-        return tareaService.updateTarea(tarea, id);
+        return tareaService.updateTarea(id, tarea);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteTarea(@PathVariable long id) {
+    public Boolean deleteTarea(@PathVariable long id) {
         return tareaService.deleteTareaById(id);
     }
 }
