@@ -32,7 +32,7 @@ public class TareaService {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTarea);
     }
 
-    public ResponseEntity<Tarea> updateSprint(Tarea tarea, Long id_Tarea) {
+    public ResponseEntity<Tarea> updateTarea(Tarea tarea, Long id_Tarea) {
         Optional<Tarea> data = tareaRepository.findById(id_Tarea);
         return data.map(_tarea -> {
             _tarea.setDescripcion_Tarea(tarea.getDescripcion_Tarea());
