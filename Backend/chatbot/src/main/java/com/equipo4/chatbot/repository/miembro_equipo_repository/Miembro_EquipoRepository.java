@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface Miembro_EquipoRepository extends JpaRepository<Miembro_Equipo, ID_Miembro_Equipo> {
     
-    @Query("SELECT m FROM Miembro_Equipo m WHERE m.id.ID_Equipo = :ID_Equipo")
+    @Query("SELECT m FROM Miembro_Equipo m WHERE m.id.id_equipo = :ID_Equipo")
     List<Miembro_Equipo> findByID_Equipo(Long ID_Equipo);
-    @Query("SELECT m FROM Miembro_Equipo m WHERE m.id.ID_Miembro = :ID_Miembro")
+    @Query("SELECT m FROM Miembro_Equipo m WHERE m.id.id_miembro = :ID_Miembro")
     List<Miembro_Equipo> findByID_Miembro(Long ID_Miembro);
 }

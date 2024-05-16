@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 public class Equipo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_EQUIPO", updatable = false, nullable = false)
-    private Long ID_Equipo;
+    private Long id_equipo;
 
     @Column(name = "NOMBRE_EQUIPO")
-    private String Nombre_Equipo;
+    private String nombre_equipo;
 
     @Column(name = "ID_LIDER")
-    private Long manager;
+    private Long id_lider;
 
 }

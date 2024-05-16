@@ -36,7 +36,7 @@ public class ProyectoService {
         Optional<Proyecto> data = proyectoRepository.findById(id_Proyecto);
         return data.map(_proyecto -> {
             _proyecto.setNombre(proyecto.getNombre());
-            _proyecto.setEquipo(proyecto.getEquipo());
+            _proyecto.setId_equipo(proyecto.getId_equipo());
             Proyecto updatedProyecto = proyectoRepository.save(_proyecto);
             return ResponseEntity.ok(updatedProyecto);
         }).orElseGet(() -> ResponseEntity.notFound().build());

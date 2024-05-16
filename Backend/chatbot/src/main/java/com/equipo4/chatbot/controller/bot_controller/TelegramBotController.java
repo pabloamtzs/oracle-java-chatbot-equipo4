@@ -3,9 +3,6 @@ import com.equipo4.chatbot.utils.BotCommands;
 import com.equipo4.chatbot.utils.BotLabels;
 import com.equipo4.chatbot.utils.BotMessages;
 
-
-
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +26,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody; // Import the RequestBody class
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.HttpStatus;
 
 public class TelegramBotController extends TelegramLongPollingBot {
@@ -93,7 +90,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
 
             try {
                 Tarea tarea = getTareaById(id).getBody();
-                tarea.setDone("true");
+                tarea.setEstado("Hecho");
                 updateTarea(tarea, id);
                 BotHelper.sendMessageToTelegram(chatId, BotMessages.TASK_DONE.getMessage(), this);
             } catch (Exception e) {
@@ -106,7 +103,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
 
             try {
                 Tarea tarea = getTareaById(id).getBody();
-                tarea.setDone("false");
+                tarea.setEstado("Pendiente");
                 updateTarea(tarea, id);
                 BotHelper.sendMessageToTelegram(chatId, BotMessages.TASK_UNDONE.getMessage(), this);
             } catch (Exception e) {
@@ -150,8 +147,8 @@ public class TelegramBotController extends TelegramLongPollingBot {
 
             for (Tarea tarea : tareasActivas) {
               KeyboardRow currentRow = new KeyboardRow();
-              currentRow.add(tarea.getDescription());
-              currentRow.add(tarea.getID() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
+              currentRow.add(tarea.getDescripcion_tarea());
+              currentRow.add(tarea.getId_tarea() + BotLabels.DASH.getLabel() + BotLabels.DONE.getLabel());
               keyboard.add(currentRow);
             }
 
@@ -159,9 +156,9 @@ public class TelegramBotController extends TelegramLongPollingBot {
 
             for (Tarea tarea : tareaTerminada) {
               KeyboardRow currentRow = new KeyboardRow();
-              currentRow.add(tarea.getDescription());
-              currentRow.add(tarea.getID() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
-              currentRow.add(tarea.getID() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
+              currentRow.add(tarea.getDescripcion_tarea());
+              currentRow.add(tarea.getId_tarea() + BotLabels.DASH.getLabel() + BotLabels.UNDO.getLabel());
+              currentRow.add(tarea.getId_tarea() + BotLabels.DASH.getLabel() + BotLabels.DELETE.getLabel());
               keyboard.add(currentRow);
             }
 
@@ -202,9 +199,9 @@ public class TelegramBotController extends TelegramLongPollingBot {
         else {
             try {
                 Tarea nuevaTarea = new Tarea();
-                nuevaTarea.setDescription(messageTextFromTelegram);
-                nuevaTarea.setDone("false");
-                ResponseEntity entity = addTarea(nuevaTarea);
+                nuevaTarea.setDescripcion_tarea(messageTextFromTelegram);
+                nuevaTarea.setEstado("Pendiente");
+                ResponseEntity<Tarea> entity = addTarea(nuevaTarea);
 
                 SendMessage messageToTelegram = new SendMessage();
                 messageToTelegram.setChatId(chatId);
@@ -245,7 +242,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
     ResponseEntity<Tarea> responseEntity = tareaService.addTarea(tarea);
     Tarea td = responseEntity.getBody();
     HttpHeaders responseHeaders = new HttpHeaders();
-    responseHeaders.set("location", "" + td.getID());
+    responseHeaders.set("location", "" + td.getId_tarea());
     responseHeaders.set("Access-Control-Expose-Headers", "location");
     // URI location = URI.create(""+td.getID())
 
@@ -253,14 +250,14 @@ public class TelegramBotController extends TelegramLongPollingBot {
   }
 
   // UPDATE /Tarea/{id}
-  public ResponseEntity updateTarea(@RequestBody Tarea tarea, @PathVariable long id) {
+  public ResponseEntity<Tarea> updateTarea(@RequestBody Tarea tarea, @PathVariable long id) {
     try {
-      ResponseEntity<Tarea> _tarea = tareaService.updateTarea(id, tarea);
+      Tarea _tarea = tareaService.updateTarea(tarea, id).getBody();
       System.out.println(_tarea.toString());
-      return new ResponseEntity<>(_tarea, HttpStatus.OK);
+      return ResponseEntity.ok(_tarea);
     } catch (Exception e) {
       logger.error(e.getLocalizedMessage(), e);
-      return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+      return ResponseEntity.notFound().build();
     }
   }
 

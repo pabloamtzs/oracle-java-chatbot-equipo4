@@ -55,6 +55,7 @@ function App() {
         (result) => {
           const remainingItems = items.filter(item => item.id !== deleteId);
           setItems(remainingItems);
+          window.location.reload();
         },
         (error) => {
           setError(error);
@@ -64,11 +65,11 @@ function App() {
     function toggleDone(event, id, description, done) {
       event.preventDefault();
       modifyItem(id, description, done).then(
-        (result) => { reloadOneIteam(id); },
+        (result) => { reloadOneItem(id); },
         (error) => { setError(error); }
       );
     }
-    function reloadOneIteam(id){
+    function reloadOneItem(id){
       fetch(API_LIST+"/"+id)
         .then(response => {
           if (response.ok) {
@@ -82,35 +83,35 @@ function App() {
             const items2 = items.map(
               x => (x.id === id ? {
                  ...x,
-                 'description':result.description,
-                 'done': result.done
+                 'descripcion':result.descripcion_tarea,
+                 'estado': result.estado
                 } : x));
             setItems(items2);
+            window.location.reload();
           },
           (error) => {
             setError(error);
           });
     }
-    function modifyItem(id, description, done) {
+    async function modifyItem(id, description, done) {
       // console.log("deleteItem("+deleteId+")")
-      var data = {"descripcion_Tarea": description, "estado": done, "sprint": null};
-      return fetch(API_LIST+"/"+id, {
+      console.log("Id a trabajar: " + id);
+      var data = {"descripcion_tarea": description, "estado": done, "id_sprint": null};
+      const response = await fetch(API_LIST + "/" + id, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-      })
-      .then(response => {
-        // console.log("response=");
-        // console.log(response);
-        if (response.ok) {
-          // console.log("deleteItem FETCH call is ok");
-          return response;
-        } else {
-          throw new Error('Something went wrong ...');
-        }
       });
+      // console.log("response=");
+      // console.log(response);
+      if (response.ok) {
+        // console.log("deleteItem FETCH call is ok");
+        return response;
+      } else {
+        throw new Error('Something went wrong ...');
+      }
     }
     /*
     To simulate slow network, call sleep before making API calls.
@@ -147,11 +148,10 @@ function App() {
        // similar to componentDidMount()
     );
     function addItem(text){
-      console.log("addItem("+text+")")
+      console.log("addItem("+text+")");
       setInserting(true);
-      var data = {};
+      var data = {"descripcion_tarea": text, "estado": "Pendiente", "id_sprint": null};
       console.log(data);
-      data.description = text;
       fetch(API_LIST, {
         method: 'POST',
         // We convert the React state to JSON and send it as the POST body
@@ -173,7 +173,7 @@ function App() {
       }).then(
         (result) => {
           var id = result.headers.get('location');
-          var newItem = {"id": id, "description": text, "done": "false", "sprint": null};
+          var newItem = {"id_tarea": id, "descripcion_tarea": text, "estado": "Pendiente", "id_sprint": null};
           setItems([newItem, ...items]);
           setInserting(false);
         },
@@ -199,11 +199,11 @@ function App() {
           <TableBody>
           {items.map(item => (
             !item.done && (
-            <tr key={item.id}>
-              <td className="description">{item.description}</td>
+            <tr key={item.id_tarea}>
+              <td className="descripcion">{item.descripcion_tarea}</td>
               { /*<td>{JSON.stringify(item, null, 2) }</td>*/ }
               <td className="date"><Moment format="MMM Do hh:mm:ss">{item.createdAt}</Moment></td>
-              <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id, item.description, !item.done)} size="small">
+              <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id_tarea, item.descripcion_tarea, "Hecho", item.id_sprint)} size="small">
                     Done
                   </Button></td>
             </tr>
@@ -218,13 +218,13 @@ function App() {
           {items.map(item => (
             item.done && (
 
-            <tr key={item.id}>
-              <td className="description">{item.description}</td>
-              <td className="date"><Moment format="MMM Do hh:mm:ss">{item.createdAt}</Moment></td>done
-              <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id, item.description, !item.done)} size="small">
+            <tr key={item.id_tarea}>
+              <td className="description">{item.descripcion_tarea}</td>
+              <td className="date"><Moment format="MMM Do hh:mm:ss">{item.createdAt}</Moment></td>Hecho
+              <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id_tarea, item.descripcion_tarea, "Pendiente")} size="small">
                     Undo
                   </Button></td>
-              <td><Button startIcon={<DeleteIcon />} variant="contained" className="DeleteButton" onClick={() => deleteItem(item.id)} size="small">
+              <td><Button startIcon={<DeleteIcon />} variant="contained" className="DeleteButton" onClick={() => deleteItem(item.id_tarea)} size="small">
                     Delete
                   </Button></td>
             </tr>

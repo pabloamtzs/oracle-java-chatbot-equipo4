@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface Empleado_TareaRepository extends JpaRepository<Empleado_Tarea, ID_Empleado_Tarea> {
     
-    @Query("SELECT m FROM Empleado_Tarea m WHERE m.id.ID_Empleado = :ID_Empleado")
+    @Query("SELECT m FROM Empleado_Tarea m WHERE m.id.id_empleado = :ID_Empleado")
     List<Empleado_Tarea> findByID_Empleado(Long ID_Empleado);
-    @Query("SELECT m FROM Empleado_Tarea m WHERE m.id.ID_Tarea = :ID_Tarea")
+    @Query("SELECT m FROM Empleado_Tarea m WHERE m.id.id_tarea = :ID_Tarea")
     List<Empleado_Tarea> findByID_Tarea(Long ID_Tarea);
 }

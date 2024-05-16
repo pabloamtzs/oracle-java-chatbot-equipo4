@@ -18,31 +18,31 @@ import lombok.NoArgsConstructor;
 public class Empleado {
  
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_EMPLEADO", updatable = false, nullable = false)
-    private Long ID_Empleado;
+    private Long id_empleado;
 
     @Column(name = "NOMBRE")
-    private String Nombre;
+    private String nombre;
 
     @Column(name = "APELLIDO")
-    private String Apellido;
+    private String apellido;
 
     @Column(name = "POSICION")
-    private String Posicion;
+    private String posicion;
 
     @Column(name = "EMAIL")
-    private String Email;
+    private String email;
 
     @Column(name = "CONTRASENA")
-    private String Contrasena;
+    private String contrasena;
 
     @Column(name = "HORA_ENTRADA")
-    private LocalTime Hora_Entrada;
+    private LocalTime hora_entrada;
 
     @Column(name = "HORA_SALIDA")
-    private LocalTime Hora_Salida;
+    private LocalTime hora_salida;
 
     @Column(name = "SALARIO")
-    private BigDecimal Salario;
+    private BigDecimal salario;
 }

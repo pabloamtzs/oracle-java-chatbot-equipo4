@@ -12,8 +12,8 @@ import lombok.*;
 public class ID_Empleado_Tarea implements Serializable {
     
     @Column(name = "ID_EMPLEADO", updatable = false, nullable = false)
-    private Long ID_Empleado;
+    private Long id_empleado;
 
     @Column(name = "ID_TAREA", updatable = false, nullable = false)
-    private Long ID_Tarea;
+    private Long id_tarea;
 }
