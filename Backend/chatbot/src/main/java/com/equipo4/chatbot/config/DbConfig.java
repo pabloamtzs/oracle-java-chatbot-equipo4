@@ -23,14 +23,16 @@ public class DbConfig extends DataSourceProperties {
     public DbConfig(OciConfig ociConfig){
         this.ociConfig = ociConfig;
     }
-
-    /*@Override
+    /*
+    @Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
 		String username = getSecretFromVault(ociConfig.getRegion(), ociConfig.getVault().getDbUsernameOcid());
 		this.setUsername(username);
 		String password = getSecretFromVault(ociConfig.getRegion(), ociConfig.getVault().getDbPasswordOcid());
 		this.setPassword(password);
+        String url = getSecretFromVault(ociConfig.getRegion(), ociConfig.getVault().getDbUrlOcid());
+        this.setUrl(url);
 	}*/
 
     private String getSecretFromVault(String regionIdString, String secretOcid) {

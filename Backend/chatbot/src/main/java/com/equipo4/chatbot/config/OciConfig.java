@@ -23,5 +23,7 @@ public class OciConfig {
         private String dbUsernameOcid;
 
         private String dbPasswordOcid;
+
+        private String dbUrlOcid;
     } 
 }
