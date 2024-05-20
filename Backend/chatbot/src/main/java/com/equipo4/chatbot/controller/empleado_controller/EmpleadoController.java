@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.equipo4.chatbot.model.empleado.Empleado;
 import com.equipo4.chatbot.service.empleado_service.EmpleadoService;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -27,6 +28,11 @@ public class EmpleadoController {
         return empleadoService.getEmpleadoById(id);
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Empleado> getEmpleadoByEmail(@PathVariable String email) {
+        return empleadoService.getEmpleadoByEmail(email);
+    }
+    
     @PostMapping
     public ResponseEntity<Empleado> addEmpleado(@RequestBody Empleado empleado) {
         return empleadoService.addEmpleado(empleado);

@@ -28,6 +28,12 @@ public class EmpleadoService {
                    .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    public ResponseEntity<Empleado> getEmpleadoByEmail(String email) {
+        Optional<Empleado> data = empleadoRepository.findByEmail(email);
+        return data.map(empleado -> ResponseEntity.ok(empleado))
+                   .orElseGet(() -> ResponseEntity.notFound().build());
+    }    
+
     public ResponseEntity<Empleado> addEmpleado(Empleado empleado) {
         Empleado savedEmpleado = empleadoRepository.save(empleado);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmpleado);

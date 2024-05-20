@@ -1,7 +1,7 @@
 package com.equipo4.chatbot.model.sprint;
 
 import java.time.LocalTime;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,8 @@ import lombok.NoArgsConstructor;
 public class Sprint {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SPR_SEQ")
+    @SequenceGenerator(name = "SPR_SEQ", sequenceName = "SPR_SEQ", allocationSize = 1)
     @Column(name = "ID_SPRINT", updatable = false, nullable = false)
     private Long id_sprint;
 
