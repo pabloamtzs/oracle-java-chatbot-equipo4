@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class Empleado {
  
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMP_SEQ")
-    @SequenceGenerator(name = "EMP_SEQ", sequenceName = "EMP_SEQ", allocationSize = 1)
+    @GeneratedValue(generator="EMP_SEQ") 
+    @SequenceGenerator(name="EMP_SEQ",sequenceName="ISEQ$$_121931", allocationSize=1) 
     @Column(name = "ID_EMPLEADO", updatable = false, nullable = false)
     private Long id_empleado;
 
@@ -30,7 +30,8 @@ public class Empleado {
     private String apellido;
 
     @Column(name = "POSICION")
-    private String posicion;
+    @Enumerated(EnumType.STRING)
+    private Role posicion;
 
     @Column(name = "EMAIL")
     private String email;
