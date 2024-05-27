@@ -1,6 +1,6 @@
 package com.equipo4.chatbot.model.tarea;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,8 @@ import java.sql.Timestamp;
 public class Tarea {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TRA_SEQ")
+    @SequenceGenerator(name = "TRA_SEQ", sequenceName = "TRA_SEQ", allocationSize = 1)
     @Column(name = "ID_TAREA", updatable = false, nullable = false)
     private Long id_tarea;
 

@@ -17,5 +17,5 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
 
     @Query("SELECT m FROM Empleado m WHERE m.email = :Email")
     Optional<Empleado> findByEmail(String Email);
-
+     
 }

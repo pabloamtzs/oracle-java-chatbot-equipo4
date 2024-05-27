@@ -3,7 +3,7 @@ package com.equipo4.chatbot.model.empleado;
 import java.math.BigDecimal;
 import java.time.LocalTime;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +18,8 @@ import lombok.NoArgsConstructor;
 public class Empleado {
  
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator="EMP_SEQ") 
+    @SequenceGenerator(name="EMP_SEQ",sequenceName="ISEQ$$_121931", allocationSize=1) 
     @Column(name = "ID_EMPLEADO", updatable = false, nullable = false)
     private Long id_empleado;
 
@@ -29,7 +30,8 @@ public class Empleado {
     private String apellido;
 
     @Column(name = "POSICION")
-    private String posicion;
+    @Enumerated(EnumType.STRING)
+    private Role posicion;
 
     @Column(name = "EMAIL")
     private String email;

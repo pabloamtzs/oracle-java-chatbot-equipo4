@@ -1,6 +1,6 @@
 package com.equipo4.chatbot.model.miembro_equipo;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

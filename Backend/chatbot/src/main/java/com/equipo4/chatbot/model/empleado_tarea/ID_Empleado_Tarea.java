@@ -1,7 +1,7 @@
 package com.equipo4.chatbot.model.empleado_tarea;
 
 import java.io.Serializable;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 @Embeddable

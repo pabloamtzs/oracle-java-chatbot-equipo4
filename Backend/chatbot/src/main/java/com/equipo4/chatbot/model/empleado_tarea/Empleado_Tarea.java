@@ -1,6 +1,6 @@
 package com.equipo4.chatbot.model.empleado_tarea;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
