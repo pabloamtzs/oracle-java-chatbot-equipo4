@@ -19,13 +19,12 @@ public class WebSecurityConfiguration {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @SuppressWarnings("deprecation")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { 
         http
             .csrf (csrf -> csrf.disable())
             .authorizeRequests (authorize -> authorize
-                .requestMatchers("/api/empleado", "/build/**", "/homepage.html").permitAll()
+                .antMatchers("/api/empleado", "/build/**", "/homepage.html").permitAll()
                 .anyRequest().permitAll())
             .httpBasic(withDefaults())
             .formLogin(formLogin -> formLogin
