@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.descripcion{
+  font-size: 5px;
+  color: #282c34;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.tasks{
+  margin: 10 auto;
+  background-color: red;
+}

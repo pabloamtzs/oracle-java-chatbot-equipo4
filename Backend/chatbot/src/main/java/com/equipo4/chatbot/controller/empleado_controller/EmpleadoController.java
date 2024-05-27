@@ -27,6 +27,11 @@ public class EmpleadoController {
         return empleadoService.getEmpleadoById(id);
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Empleado> getEmpleadoByEmail(@PathVariable String email) {
+        return empleadoService.getEmpleadoByEmail(email);
+    }
+
     @PostMapping
     public ResponseEntity<Empleado> addEmpleado(@RequestBody Empleado empleado) {
         return empleadoService.addEmpleado(empleado);
@@ -41,4 +46,6 @@ public class EmpleadoController {
     public ResponseEntity<Boolean> deleteEmpleado(@PathVariable long id) {
         return empleadoService.deleteEmpleadoById(id);
     }
+
+
 }

@@ -150,7 +150,7 @@ function App() {
     function addItem(text){
       console.log("addItem("+text+")");
       setInserting(true);
-      var data = {"descripcion_tarea": text, "estado": "Pendiente", "id_sprint": null};
+      var data = {"nombre_tarea": text, "estado": "Pendiente", "id_sprint": null, "fecha_creacion": new Date()};
       console.log(data);
       fetch(API_LIST, {
         method: 'POST',
@@ -173,7 +173,7 @@ function App() {
       }).then(
         (result) => {
           var id = result.headers.get('location');
-          var newItem = {"id_tarea": id, "descripcion_tarea": text, "estado": "Pendiente", "id_sprint": null};
+          var newItem = {"id_tarea": id, "nombre_tarea": text, "estado": "Pendiente", "id_sprint": null};
           setItems([newItem, ...items]);
           setInserting(false);
         },
@@ -186,53 +186,66 @@ function App() {
     return (
       <div className="App">
         <h1>MY TODO LIST</h1>
-        <NewItem addItem={addItem} isInserting={isInserting}/>
-        { error &&
-          <p>Error: {error.message}</p>
-        }
-        { isLoading &&
-          <CircularProgress />
-        }
-        { !isLoading &&
-        <div id="maincontent">
-        <table id="itemlistNotDone" className="itemlist">
-          <TableBody>
-          {items.map(item => (
-            !item.done && (
-            <tr key={item.id_tarea}>
-              <td className="descripcion">{item.descripcion_tarea}</td>
-              { /*<td>{JSON.stringify(item, null, 2) }</td>*/ }
-              <td className="date"><Moment format="MMM Do hh:mm:ss">{item.createdAt}</Moment></td>
-              <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id_tarea, item.descripcion_tarea, "Hecho", item.id_sprint)} size="small">
-                    Done
-                  </Button></td>
-            </tr>
-          )))}
-          </TableBody>
-        </table>
-        <h2 id="donelist">
-          Done items
-        </h2>
-        <table id="itemlistDone" className="itemlist">
-          <TableBody>
-          {items.map(item => (
-            item.done && (
+        
+        { error ?
+          <p>Error: {error.message}</p>:
+          <div>
+            { isLoading &&
+              <CircularProgress />
+            }
+            { !isLoading &&
+            <div id="maincontent">
+            <NewItem addItem={addItem} isInserting={isInserting}/>
+            <table id="itemlistNotDone" className="itemlist">
+              <TableBody>
+              {items.map(item => (
+                !item.done && (
+                <div clasName = "tasks" >
+                <table key={item.id_tarea}>
+                  <tr className="descripcion">{item.nombre_tarea}</tr>
+                  { /*<td>{JSON.stringify(item, null, 2) }</td>*/ }
+                  <tr>
+                    <p className='descripcion'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, 
+                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse 
+                    cillum dolore eu fugiat nulla pariatur.</p>
+                  </tr>
+                  <td className="date"><Moment format = "MMM DD hh:mm a">{item.fecha_creacion}</Moment></td>
+                  <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id_tarea, item.nombre_tarea, "Hecho", item.id_sprint)} size="small">
+                        Done
+                      </Button></td>
+                </table>
+                </div>
+              )))}
+              </TableBody>
+            </table>
+            <h2 id="donelist">
+              Done items
+            </h2>
+            <table id="itemlistDone" className="itemlist">
+              <TableBody>
+              {items.map(item => (
+                item.done && (
 
-            <tr key={item.id_tarea}>
-              <td className="description">{item.descripcion_tarea}</td>
-              <td className="date"><Moment format="MMM Do hh:mm:ss">{item.createdAt}</Moment></td>Hecho
-              <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id_tarea, item.descripcion_tarea, "Pendiente")} size="small">
-                    Undo
-                  </Button></td>
-              <td><Button startIcon={<DeleteIcon />} variant="contained" className="DeleteButton" onClick={() => deleteItem(item.id_tarea)} size="small">
-                    Delete
-                  </Button></td>
-            </tr>
-          )))}
-          </TableBody>
-        </table>
-        </div>
+                <tr key={item.id_tarea}>
+                  <td className="description">{item.nombre_tarea}</td>
+                  <td className="date"><Moment format="MMM Do hh:mm:ss">{item.createdAt}</Moment></td>Hecho
+                  <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item.id_tarea, item.nombre_tarea, "Pendiente")} size="small">
+                        Undo
+                      </Button></td>
+                  <td><Button startIcon={<DeleteIcon />} variant="contained" className="DeleteButton" onClick={() => deleteItem(item.id_tarea)} size="small">
+                        Delete
+                      </Button></td>
+                </tr>
+              )))}
+              </TableBody>
+            </table>
+            </div>
+            }
+          </div>
+           
         }
+        
+        
 
       </div>
     );
