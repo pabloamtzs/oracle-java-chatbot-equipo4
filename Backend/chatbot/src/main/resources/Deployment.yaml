@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: equipo4-chatbot-deployment
+  labels:
+    app: equipo4-chatbot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: equipo4-chatbot
+  template:
+    metadata:
+      labels:
+        app: equipo4-chatbot
+    spec:
+      containers:
+        - name: equipo4-chatbot
+          image: %DOCKER_REGISTRY%/equipo4-chatbot-springboot:0.1
+          imagePullPolicy: Always
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: dbuser
+                  key: dbusername
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dbuser
+                  key: dbpassword
+            - name: TNS_ADMIN
+              value: "/equipo4-chatbot/creds"
+            - name: TNS_ADMIN_DIR
+              value: "/equipo4-chatbot/creds"
+          volumeMounts:
+            - name: creds
+              mountPath: /equipo4-chatbot/creds
+          ports:
+            - containerPort: 8085
+      restartPolicy: Always
+      volumes:
+        - name: creds
+          secret:
+            secretName: db-wallet-secret

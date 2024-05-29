@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> {
                     try {
                         requests
-                        .antMatchers("/api/auth/**","/api/empleado/**","/api/auth/login", "/api/empleado")
+                        .antMatchers("/api/auth/**","/api/empleado/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
