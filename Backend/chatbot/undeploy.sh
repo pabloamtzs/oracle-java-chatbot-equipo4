@@ -1,0 +1,3 @@
+echo delete frontend deployment and service...
+kubectl -n equipo4-chatbot delete deployment equipo4-chatbot-deployment
+# kubectl -n equipo4-chatbot delete service equipo4-chatbot-service
