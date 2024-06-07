@@ -1,0 +1,186 @@
+﻿version: 0.1
+component: build
+timeoutInSeconds: 6000
+shell: bash
+
+env:
+  variables:
+    image_name: "equipo4-chatbot-springboot"
+    appName: "equipo4-chatbot"
+    docker_registry: "mx-queretaro-1.ocir.io/axjt4pddcjvb/equipo-4_container_repository"
+  exportedVariables:
+    - APP_NAME
+    - OCIR_PATH
+    - TAG
+
+steps:
+  - type: Command
+    name: "Configuracion de exportedVariables"
+    timeoutInSeconds: 4000
+    command: |
+      APP_NAME=$appName
+      echo $APP_NAME
+
+  - type: Command
+    name: "Define Image Tag - Commit ID"
+    timeoutInSeconds: 30
+    command: |
+      COMMIT_ID=`echo ${OCI_TRIGGER_COMMIT_HASH} | cut -c 1-7`
+      BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
+      [ -z "$COMMIT_ID" ] && TAG=$BUILDRUN_HASH || TAG=$COMMIT_ID 
+
+  - type: Command
+    name: "Define OCIR Path"
+    timeoutInSeconds: 30
+    command: |
+      OCIR_PATH=$docker_registry/$image_name
+
+  - type: Command
+    name: "Instalar GraalVM Enterprise 22.x Native Image para Java 17"
+    command: |
+      echo "Instalando GraalVM Enterprise 22.x Native Image para Java 17..."
+      yum -y install graalvm22-ee-17-native-image
+
+  - type: Command
+    name: "Configurar variable de entorno JAVA_HOME"
+    command: |
+      echo "Configurando JAVA_HOME..."
+    env:
+      variables:
+        JAVA_HOME: "/usr/lib64/graalvm/graalvm22-ee-java17"
+
+  - type: Command
+    name: "Configurar variable PATH"
+    command: |
+      export PATH=$JAVA_HOME/bin:$PATH
+      echo "Java version:"
+      java -version
+
+  - type: Command
+    name: "Verificar instalacion de Docker"
+    command: |
+      echo "Verificando si Docker esta instalado..."
+      if ! command -v docker &> /dev/null; then
+          echo "Docker no esta instalado. Aborting."
+          exit 1
+      fi
+      echo "Docker esta instalado:"
+      docker --version
+
+  - type: Command
+    name: "Instalar Docker Buildx"
+    command: |
+      echo "Instalando Docker Buildx..."
+      mkdir -p ~/.docker/cli-plugins/
+      curl -Lo ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.14.1/buildx-v0.14.1.linux-amd64
+      chmod +x ~/.docker/cli-plugins/docker-buildx
+      echo "Docker Buildx instalado:"
+      docker buildx version
+
+  - type: Command
+    name: "Configurar BuildKit"
+    command: |
+      echo "Habilitando Docker BuildKit..."
+      export DOCKER_BUILDKIT=1
+      export COMPOSE_DOCKER_CLI_BUILD=1
+      echo "DOCKER_BUILDKIT=$DOCKER_BUILDKIT"
+      echo "COMPOSE_DOCKER_CLI_BUILD=$COMPOSE_DOCKER_CLI_BUILD"
+      docker info | grep -i buildx
+
+  - type: Command
+    name: "Instalar Kubectl"
+    command: |
+      echo "Instalando Kubectl..."
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      chmod +x kubectl
+      mv kubectl /usr/local/bin/
+      echo "Kubectl instalado:"
+      kubectl version --client
+  
+  - type: Command
+    name: "Configurar Kubectl"
+    command: |
+      oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.mx-queretaro-1.aaaaaaaaktnqs53ybnpj2todb77abmitork75yttwidbozbbecpxdq34o6oq --file $HOME/.kube/config --region mx-queretaro-1 --token-version 2.0.0  --kube-endpoint PUBLIC_ENDPOINT
+      export KUBECONFIG=$HOME/.kube/config
+      kubectl get nodes
+      echo "Kubectl configurado"
+
+  - type: Command
+    name: "Instalar jq"
+    command: |
+      yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      yum update
+      yum install -y jq
+      echo "jq instalado"
+
+  - type: Command
+    name: "Obtener secretos de Kubernetes"
+    command: |
+      echo "Obteniendo secretos de Kubernetes y guardándolos como archivos temporales..."
+      cd Backend/chatbot
+      kubectl get secret dbuser -o jsonpath='{.data.dbusername}' --namespace=equipo4-chatbot | base64 --decode > db_user.secret
+      kubectl get secret dbuser -o jsonpath='{.data.dbpassword}' --namespace=equipo4-chatbot | base64 --decode > db_password.secret
+      kubectl get secret db-wallet-secret --namespace=equipo4-chatbot -o json > secret.json
+      mkdir -p tns_admin
+      jq -r '.data | to_entries[] | .key + " " + .value' secret.json | while read -r key value; do
+          echo "$value" | base64 --decode > "tns_admin/$key"
+      done
+      tar -czf wallet_secret.tar.gz -C tns_admin .
+      echo "Secretos obtenidos y guardados como archivos temporales"
+
+  - type: Command
+    name: "Verificar existencia de archivos de secretos"
+    command: |
+      echo "Verificando existencia de archivos de secretos..."
+      cd Backend/chatbot
+      if [ ! -f "db_user.secret" ]; then
+          echo "Error: db_user.secret not found!"
+          exit 1
+      fi
+      if [ ! -f "db_password.secret" ]; then
+          echo "Error: db_password.secret not found!"
+          exit 1
+      fi
+      if [ ! -d "tns_admin" ]; then
+          echo "Error: tns_admin directory not found!"
+          exit 1
+      fi
+      echo "Archivos de secretos verificados"
+
+  - type: Command
+    name: "Construir imagen Docker usando secretos"
+    command: |
+      echo "Eliminando imagen Docker anterior..."
+      image_version=$(date +%Y%m%d%H%M%S)
+      docker rmi -f $image_name || true
+      echo "Construyendo imagen Docker usando secretos..."
+      cd Backend/chatbot
+      DOCKER_BUILDKIT=1 docker build \
+          --secret id=db_user,src=db_user.secret \
+          --secret id=db_password,src=db_password.secret \
+          --secret id=wallet_secret,src=wallet_secret.tar.gz \
+          -t $image_name .
+      docker images
+      echo "Imagen Docker construida"
+
+  - type: Command
+    name: "Limpiar archivos temporales"
+    command: |
+      cd Backend/chatbot
+      echo "Limpiando archivos temporales..."
+      rm db_user.secret db_password.secret secret.json
+      rm -r tns_admin
+      rm wallet_secret.tar.gz
+      echo "Archivos temporales limpiados"
+
+  - type: Command
+    name: "Undeploy de la aplicacion"
+    command: |
+      echo "Eliminando deployment de la aplicacion..."
+      kubectl delete deployment $appName-deployment --namespace=equipo4-chatbot
+      echo "Deployment eliminado"
+
+outputArtifacts:
+  - name: equipo4-chatbot-springboot
+    type: DOCKER_IMAGE
+    location: equipo4-chatbot-springboot
