@@ -1,5 +1,5 @@
 # Usa una imagen de Maven para construir el proyecto
-FROM --platform=linux/amd64 maven:3.8.1-openjdk-11 AS builder
+FROM --platform=linux/amd64 maven:3.8.1-openjdk-11-slim AS builder
 
 # Establece el directorio de trabajo
 WORKDIR /equipo4-chatbot
@@ -20,10 +20,10 @@ RUN --mount=type=secret,id=db_user \
     export DB_PASSWORD=$(cat /run/secrets/db_password) && \
     mkdir -p /equipo4-chatbot/creds && \
     tar -xzf /run/secrets/wallet_secret -C /equipo4-chatbot/creds && \
-    mvn clean package
+    mvn clean compile package
 
 # Usa una imagen más ligera de OpenJDK para ejecutar la aplicación
-FROM --platform=linux/amd64 openjdk:11
+FROM --platform=linux/amd64 openjdk:11-slim
 
 # Crea el directorio de trabajo
 WORKDIR /equipo4-chatbot
