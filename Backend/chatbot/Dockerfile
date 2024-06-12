@@ -20,7 +20,7 @@ RUN --mount=type=secret,id=db_user \
     export DB_PASSWORD=$(cat /run/secrets/db_password) && \
     mkdir -p /equipo4-chatbot/creds && \
     tar -xzf /run/secrets/wallet_secret -C /equipo4-chatbot/creds && \
-    mvn clean compile package -DSkipTests
+    mvn clean compile package -DskipTests
 
 # Usa una imagen más ligera de OpenJDK para ejecutar la aplicación
 FROM --platform=linux/amd64 openjdk:11-slim
