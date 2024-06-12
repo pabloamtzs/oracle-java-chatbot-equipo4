@@ -2,6 +2,8 @@ package com.equipo4.chatbot.security.config;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.ws.rs.HttpMethod;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 import com.equipo4.chatbot.security.jwt.JWTAuthenticationFilter;
 
@@ -35,7 +38,7 @@ public class SecurityConfig {
                         .authenticated()
                         .and()
                         .sessionManagement(management -> management
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                         .authenticationProvider(authenticationProvider)
                         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
                     } catch (Exception e) {
