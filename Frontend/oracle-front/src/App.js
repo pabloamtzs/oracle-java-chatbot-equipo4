@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Login from './components/login/login.component'
 import "bootstrap/dist/css/bootstrap.min.css";
-import TodoList from './components/TodoList/TodoList';
+import TodoList from "./components/TodoList/TodoList";
 import Home from './Home';
 
 export default class App extends Component {
