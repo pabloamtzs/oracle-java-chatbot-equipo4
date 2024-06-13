@@ -177,6 +177,7 @@ steps:
     name: "Undeploy de la aplicacion"
     command: |
       echo "Eliminando deployment de la aplicacion..."
+      kubectl delete ingress $appName-ingress --namespace=equipo4-chatbot
       kubectl delete deployment $appName-deployment --namespace=equipo4-chatbot
       echo "Deployment eliminado"
 

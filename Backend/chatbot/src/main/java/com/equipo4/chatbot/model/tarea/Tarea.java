@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
@@ -29,6 +29,18 @@ public class Tarea {
 
     @Column(name = "ID_SPRINT")
     private Long id_sprint;
+
+    @Column(name = "FECHA_CREACION")
+    private Timestamp fecha_creacion;
+
+    @Column(name = "FECHA_MODIFICACION")
+    private Timestamp fecha_modificacion;
+
+    @Column(name = "FECHA_TERMINADA")
+    private Timestamp fecha_terminada;
+
+    @Column(name = "NOMBRE_TAREA")
+    private String nombre_tarea;
 
     public boolean isDone() {
         return estado.equals("Hecho");

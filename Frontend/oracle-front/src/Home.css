@@ -1,0 +1,142 @@
+
+.menu{
+  margin-left: 260px;
+  height: 100%;
+  width: 1000px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root{
+    /* ==== Colors ==== */
+    --body-color: #e4e9f7;
+    --sidebar-color: #fff;
+    --primary-color: #695cfe;
+    --primary-color-light: #f6f5ff;
+    --toggle-color: #ddd;
+    --text-color: #707070;
+
+    /* ==== Transition ==== */
+    --tran-02: all 0.2s ease;
+    --tran-03: all 0.3s ease;
+    --tran-04: all 0.4s ease;
+    --tran-05: all 0.5s ease;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 260px;
+    background: #11101d;
+}
+
+.sidebar .logo-details{
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .logo-details img{
+    height: 50px;
+    min-width: 78px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.sidebar .logo-details .logo_name{
+    font-size: 22px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.sidebar .nav-links{
+    height: 100%;
+    padding-top: 30px;
+}
+
+.sidebar .nav-links li{
+    position: relative;
+    list-style: none;
+}
+
+.sidebar .nav-links li i{
+    height: 50px;
+    min-width: 78px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    font-size: 20px;
+}
+
+.sidebar .nav-links li a{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.sidebar .nav-links li a .link_name{
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.sidebar .profile-details{
+    position: fixed;
+    bottom: 0;
+}
+
+.sidebar .profile-details i{
+    color: #fff;
+    font-size: 52px;
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin: 0 14px 12px;
+    background: #1d1b31;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar .logout-details{
+    position: fixed;
+    bottom: 0;
+    left: 150px;
+
+}
+
+.sidebar .logout-details i{
+    color: #fff;
+    font-size: 52px;
+    height: 60px;
+    width: 60px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin: 0 14px 12px;
+    padding: 5px;
+    background: #1d1b31;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
