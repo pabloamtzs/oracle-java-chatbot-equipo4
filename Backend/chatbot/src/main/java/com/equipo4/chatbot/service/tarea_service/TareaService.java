@@ -42,6 +42,7 @@ public class TareaService {
             _tarea.setFecha_creacion(tarea.getFecha_creacion());
             _tarea.setFecha_modificacion(tarea.getFecha_modificacion());
             _tarea.setFecha_terminada(tarea.getFecha_terminada());
+            _tarea.setNombre_tarea(tarea.getNombre_tarea());
             Tarea updatedTarea = tareaRepository.save(_tarea);
             return ResponseEntity.ok(updatedTarea);
         }).orElseGet(() -> ResponseEntity.notFound().build());
