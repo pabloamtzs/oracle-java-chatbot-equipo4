@@ -2,8 +2,6 @@ import API_LIST from '../API';
 
 const headers = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'X-Requested-With'
 };
 
 class AuthService {
