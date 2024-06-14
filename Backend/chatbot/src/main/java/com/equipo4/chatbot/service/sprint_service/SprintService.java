@@ -27,6 +27,11 @@ public class SprintService {
                    .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    public ResponseEntity<List<Sprint>> getSprintsByProyectoId(long proyectoId) {
+        List<Sprint> sprints = sprintRepository.findByProyectoId(proyectoId);
+        return ResponseEntity.ok(sprints);
+    }
+
     public ResponseEntity<Sprint> addSprint(Sprint sprint) {
         Sprint savedSprint = sprintRepository.save(sprint);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSprint);
