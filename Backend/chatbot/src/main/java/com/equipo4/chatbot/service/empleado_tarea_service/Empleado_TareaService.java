@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.equipo4.chatbot.model.empleado_tarea.Empleado_Tarea;
 import com.equipo4.chatbot.model.empleado_tarea.ID_Empleado_Tarea;
+import com.equipo4.chatbot.model.tarea.Tarea;
 import com.equipo4.chatbot.repository.empleado_tarea_repository.Empleado_TareaRepository;
 
 @Service
@@ -73,6 +74,15 @@ public class Empleado_TareaService{
             empleado_TareaRepository.deleteById(new ID_Empleado_Tarea(idEmpleado, idTarea));
             return ResponseEntity.ok(true);
         } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<List<Tarea>> getAllTareaByEmpleadoId(Long idEmpleado) {
+        List<Tarea> tareas = empleado_TareaRepository.findById_AllTareas(idEmpleado);
+        if (!tareas.isEmpty()) {
+            return ResponseEntity.ok(tareas);
+        } else {
             return ResponseEntity.notFound().build();
         }
     }

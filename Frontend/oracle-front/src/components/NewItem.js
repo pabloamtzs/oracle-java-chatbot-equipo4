@@ -14,36 +14,56 @@ import Button from '@mui/material/Button';
 
 
 function NewItem(props) {
-  const [item, setItem] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [desc, setDesc] = useState('');
   function handleSubmit(e) {
     // console.log("NewItem.handleSubmit("+e+")");
-    if (!item.trim()) {
+    if (!nombre.trim()) {
       return;
     }
     // addItem makes the REST API call:
-    props.addItem(item);
-    setItem("");
-    window.location.reload();
+    props.addItem(nombre, desc);
+    setNombre("title");
+    setDesc("description");
+    //window.location.reload();
     e.preventDefault();
   }
-  function handleChange(e) {
-    setItem(e.target.value);
+  function handleChangeTitle(e) {
+    setNombre(e.target.value);
+  }
+  function handleChangeDesc(e) {
+    setDesc(e.target.value);
   }
   return (
     <div id="newinputform">
     <form>
       <input
-        id="newiteminput"
-        placeholder="New item"
+        id="newTitle"
+        placeholder="Title"
         type="text"
         autoComplete="off"
-        value={item}
-        onChange={handleChange}
+        value={nombre}
+        onChange={handleChangeTitle}
         // No need to click on the "ADD" button to add a todo item. You
         // can simply press "Enter":
         onKeyDown={event => {
           if (event.key === 'Enter') {
             handleSubmit(event);
+          }
+        }}
+      />
+      <input
+        id="newDescription" 
+        placeholder="Description"
+        type="text"
+        autoComplete="off"
+        value={desc}
+        onChange={handleChangeDesc}
+        // No need to click on the "ADD" button to add a todo item. You
+        // can simply press "Enter":
+        onKeyDown={a => {
+          if (a.key === 'Enter') {
+            handleSubmit(a);
           }
         }}
       />

@@ -39,9 +39,6 @@ public class TareaService {
             _tarea.setDescripcion_tarea(tarea.getDescripcion_tarea());
             _tarea.setEstado(tarea.getEstado());
             _tarea.setId_sprint(tarea.getId_sprint());
-            _tarea.setFecha_creacion(tarea.getFecha_creacion());
-            _tarea.setFecha_modificacion(tarea.getFecha_modificacion());
-            _tarea.setFecha_terminada(tarea.getFecha_terminada());
             Tarea updatedTarea = tareaRepository.save(_tarea);
             return ResponseEntity.ok(updatedTarea);
         }).orElseGet(() -> ResponseEntity.notFound().build());
@@ -54,5 +51,10 @@ public class TareaService {
         }catch(Exception e){
             return false;
         }
+    }
+
+    public ResponseEntity<List<Tarea>> getAllTareaByEquipoId(Long id_equipo) {
+        List<Tarea> tarea = tareaRepository.findById_AllTareasEquipo(id_equipo);
+        return ResponseEntity.ok(tarea);
     }
 }
