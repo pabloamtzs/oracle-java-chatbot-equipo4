@@ -60,7 +60,7 @@ class Login extends Component {
           setTimeout(() => {
             this.props.router.navigate("/home/profile");
             // window.location.reload();
-          }, 1000);
+          }, 2000);
         },
         error => {
           const resMessage =

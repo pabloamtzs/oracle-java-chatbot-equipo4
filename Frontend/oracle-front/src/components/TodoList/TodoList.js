@@ -13,10 +13,25 @@ function TodoList() {
     const [isInserting, setInserting] = useState(false);
     const [items, setItems] = useState([]);
     const [error, setError] = useState();
+    const [isEditing, setEditing] = useState(false);
 
     const currentUser = AuthService.getCurrentUser();
 
     function deleteItem(deleteId) {
+
+        fetch(`${API_LIST}/empleado-tarea/${currentUser.id_empleado}/${deleteId}`, {
+            method: 'DELETE',
+            headers: authHeader(),
+            mode: 'cors'
+        })
+        .then(response => { 
+            if (response.ok) {
+                return response;
+            } else {
+                throw new Error('Something went wrong ...');
+            }
+        })
+            
         fetch(`${API_LIST}/tarea/${deleteId}`, {
             method: 'DELETE',
             headers: authHeader(),
@@ -78,6 +93,38 @@ function TodoList() {
         );
     }
 
+    const handleTextChange = (it, newText, cambio) => {
+        const updatedItems = items.map(item => {
+            if (item.id_tarea === it.id_tarea) {
+                if (cambio === 'descripcion') {
+                    return { ...item, descripcion_tarea: newText };
+                } else if (cambio === 'nombre') {
+                    return { ...item, nombre_tarea: newText };
+                }
+            }
+            return item;
+        });
+        setItems(updatedItems);
+    
+        fetch(`/api/tarea/${it.id_tarea}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(it),
+        })
+        .then(response => response.json())
+        .then(data => console.log('Success:', data))
+        .catch((error) => console.error('Error:', error));
+    };
+    
+    const toggleEditing = (id_tarea) => {
+        const updatedItems = items.map(item => 
+            item.id_tarea === id_tarea ? { ...item, isEditing: !item.isEditing } : item
+        );
+        setItems(updatedItems);
+    };
+
     async function modifyItem(item, done) {
         const response = await fetch(`${API_LIST}/tarea/${item.id_tarea}`, {
             method: 'PUT',
@@ -97,7 +144,10 @@ function TodoList() {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`${API_LIST}/tarea`, {
+        const ruta = (currentUser.posicion === "Desarrollador" ? `/empleado-tarea/tareas/${currentUser.id_empleado} `
+            : `/tarea/equipo/${currentUser.equipo}`);
+        console.log(ruta);
+        fetch(`${API_LIST}${ruta}` , {
             headers: authHeader(),
             mode: 'cors'
         })
@@ -111,7 +161,7 @@ function TodoList() {
         .then(
             (result) => {
                 setLoading(false);
-                setItems(result);
+                setItems(result.map(item => ({ ...item, isEditing: false })));
             },
             (error) => {
                 setLoading(false);
@@ -122,7 +172,15 @@ function TodoList() {
 
     function addItem(nombre, desc) {
         setInserting(true);
-        const data = { "nombre_tarea": nombre, "descripcion_tarea": desc,"estado": "Pendiente", "id_sprint": null, "fecha_creacion": new Date(), "fecha_modificacion": new Date() };
+        const data = {
+            nombre_tarea: nombre,
+            descripcion_tarea: desc,
+            estado: "Pendiente",
+            id_sprint: null,
+            fecha_creacion: new Date(),
+            fecha_modificacion: new Date()
+        };
+    
         fetch(`${API_LIST}/tarea`, {
             method: 'POST',
             headers: {
@@ -134,22 +192,32 @@ function TodoList() {
         })
         .then(response => {
             if (response.ok) {
-                return response.headers.get('location');
+                return response.json();
             } else {
                 throw new Error('Something went wrong ...');
             }
         })
-        .then(
-            (location) => {
-                const newItem = { ...data, id_tarea: location.split('/').pop() };
-                setItems([newItem, ...items]);
-                setInserting(false);
-            },
-            (error) => {
-                setInserting(false);
-                setError(error);
+        .then(responseData => {
+            const id_tarea = responseData.id_tarea;
+            const newItem = { ...data, id_tarea };
+            setItems([newItem, ...items]);
+    
+            return fetch(`${API_LIST}/empleado-tarea/${currentUser.id_empleado}/${id_tarea}`, {
+                method: 'POST',
+                headers: authHeader(),
+                mode: 'cors'
+            });
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Something went wrong with the second request ...');
             }
-        );
+            setInserting(false);
+        })
+        .catch(error => {
+            setInserting(false);
+            setError(error);
+        });
     }
 
     return (
@@ -163,25 +231,50 @@ function TodoList() {
                     <div id="maincontent">
                         <NewItem addItem={addItem} isInserting={isInserting} />
                         <table id="itemlistNotDone" className="itemlist">
-                            <TableBody className='tabla'>
-                                {items.map(item => (
-                                    item.estado !== "Hecho" && (
-                                    <div key={item.id_tarea}>
-                                        <table className='div-table'>
-                                            <div className='task'>
-                                                <tr className="estado">{item.estado}</tr>
-                                                <tr className="title">{item.nombre_tarea}</tr>
-                                                <tr>
-                                                    <p className='description'>{item.descripcion_tarea}</p>
-                                                </tr>
-                                                <td className="date"><Moment format="MMM Do hh:mm a">{item.fecha_creacion}</Moment></td>
-                                                <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item, "Hecho")} size="small">Done</Button></td>
-                                                <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item, "Hecho")} size="small">Edit</Button></td>
-                                            </div>
-                                        </table>
-                                    </div>
-                                )))}
-                            </TableBody>
+                        <TableBody className='tabla'>
+                            {items.map(item => (
+                                item.estado !== "Hecho" && (
+                                <div key={item.id_tarea}>
+                                    <table className='div-table'>
+                                        <div className='task'>
+                                            {item.isEditing ? (
+                                                <div>
+                                                    <tr className="estado">{item.estado}</tr>
+                                                    <tr className="title">
+                                                        <input type="text" value={item.nombre_tarea} onChange={(e) => handleTextChange(item, e.target.value, "nombre")}/>
+                                                    </tr>
+                                                    <tr>
+                                                        <textarea type="text" value={item.descripcion_tarea} onChange={(e) => handleTextChange(item, e.target.value, "descripcion")} style={{ width: '90%', height: 'auto' }}/>
+                                                    </tr>
+                                                    <td className="date"><Moment format="MMM Do hh:mm a">{item.fecha_creacion}</Moment></td>
+                                                    {currentUser.posicion !== "Manager" && (
+                                                    <>
+                                                    <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item, "Hecho")} size="small">Done</Button></td>
+                                                    <td><Button variant="contained" className="DoneButton" onClick={() => toggleEditing(item.id_tarea)} size="small">Save</Button></td>
+                                                    </>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <tr className="estado">{item.estado}</tr>
+                                                    <tr className="title">{item.nombre_tarea}</tr>
+                                                    <tr>
+                                                        <p className='description'>{item.descripcion_tarea}</p>
+                                                    </tr>
+                                                    <td className="date"><Moment format="MMM Do hh:mm a">{item.fecha_creacion}</Moment></td>
+                                                    {currentUser.posicion !== "Manager" && (
+                                                    <>
+                                                    <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item, "Hecho")} size="small">Done</Button></td>
+                                                    <td><Button variant="contained" className="DoneButton" onClick={() => toggleEditing(item.id_tarea)} size="small">Save</Button></td>
+                                                    </>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </table>
+                                </div>
+                            )))}
+                        </TableBody>
                         </table>
                         {items.filter(item => item.estado !== "Hecho").length < 2 && (
                             Array.from({ length: 3 - items.filter(item => item.estado !== "Hecho").length }).map((_, index) => (
@@ -200,9 +293,12 @@ function TodoList() {
                                     <tr key={item.id_tarea}>
                                         <td >{item.nombre_tarea}</td>
                                         <td className="date"><Moment format="MMM Do hh:mm a">{item.fecha_creacion}</Moment></td>
-
+                                        {currentUser.posicion !== "Manager" && (
+                                            <>
                                         <td><Button variant="contained" className="DoneButton" onClick={(event) => toggleDone(event, item, "Pendiente")} size="small">Undo</Button></td>
                                         <td><Button startIcon={<DeleteIcon />} variant="contained" className="DeleteButton" onClick={() => deleteItem(item.id_tarea)} size="small">Delete  </Button></td>
+                                            </>
+                                        )}
                                     </tr>
                                 )))}
                             </TableBody>

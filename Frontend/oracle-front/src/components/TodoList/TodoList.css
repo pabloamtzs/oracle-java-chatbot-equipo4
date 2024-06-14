@@ -87,7 +87,7 @@
     padding-left: 0;
   }
   table.itemlist tr:hover {
-    background-color: #1615135a;
+    /* background-color: #1615135a; */
   }
   input {
     font-family: inherit;

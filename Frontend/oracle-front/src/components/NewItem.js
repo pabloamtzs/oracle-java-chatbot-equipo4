@@ -25,7 +25,7 @@ function NewItem(props) {
     props.addItem(nombre, desc);
     setNombre("title");
     setDesc("description");
-    window.location.reload();
+    //window.location.reload();
     e.preventDefault();
   }
   function handleChangeTitle(e) {

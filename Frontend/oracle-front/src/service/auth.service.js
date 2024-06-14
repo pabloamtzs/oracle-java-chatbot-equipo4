@@ -66,7 +66,6 @@ class AuthService {
         console.log("Equipo obtenido:", equipoData[0].id);
         // Combina los datos de la primera y segunda petición
         data = { ...data, equipo: equipoData[0].id.id_equipo};
-
         console.log("Datos completos:", data);
 
         return data;

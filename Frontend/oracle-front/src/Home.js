@@ -42,7 +42,7 @@ class Home extends Component {
                             <i className='bx bxs-user-circle' ></i>
                     </div>
                   </Link>
-                  <a href="/login">
+                  <a onClick={AuthService.logout} href="/login">
                     <div className="logout-details">
                             <i className='bx bx-log-out'></i>
                     </div>
