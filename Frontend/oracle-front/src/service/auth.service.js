@@ -3,8 +3,8 @@ import authHeader from './auth-header';
 
 const headers = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'X-Requested-With'
+  // 'Access-Control-Allow-Origin': '*',
+  // 'Access-Control-Allow-Headers': 'X-Requested-With'
 };
 
 class AuthService {
