@@ -5,9 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.equipo4.chatbot.model.empleado_tarea.Empleado_Tarea;
+import com.equipo4.chatbot.model.tarea.Tarea;
 import com.equipo4.chatbot.service.empleado_tarea_service.Empleado_TareaService;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/api/empleado-tarea")
@@ -50,4 +53,10 @@ public class Empleado_TareaController {
     public ResponseEntity<Boolean> deleteEmpleadoTareaById(@PathVariable Long idEmpleado, @PathVariable Long idTarea) {
         return empleado_TareaService.deleteEmpleadoTareaById(idEmpleado, idTarea);
     }
+
+    @GetMapping("/tareas/{idEmpleado}")
+    public ResponseEntity<List<Tarea>> getAllTareaByEmpleadoId(@PathVariable Long idEmpleado) {
+        return empleado_TareaService.getAllTareaByEmpleadoId(idEmpleado);
+    }
+    
 }
