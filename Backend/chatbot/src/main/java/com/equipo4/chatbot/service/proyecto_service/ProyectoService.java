@@ -27,6 +27,11 @@ public class ProyectoService {
                    .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    public ResponseEntity<List<Proyecto>> getProyectosByEquipoId(long equipoId) {
+        List<Proyecto> proyectos = proyectoRepository.findByEquipoId(equipoId);
+        return ResponseEntity.ok(proyectos);
+    }
+
     public ResponseEntity<Proyecto> addProyecto(Proyecto proyecto) {
         Proyecto savedProyecto = proyectoRepository.save(proyecto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProyecto);

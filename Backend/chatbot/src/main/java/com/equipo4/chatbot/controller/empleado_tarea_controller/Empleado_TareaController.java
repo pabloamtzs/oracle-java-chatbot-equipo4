@@ -35,8 +35,8 @@ public class Empleado_TareaController {
     }
 
     @GetMapping("/empleado/{idTarea}")
-    public ResponseEntity<List<Empleado_Tarea>> getEmpleadoByTareaId(@PathVariable Long idEmpleado) {
-        return empleado_TareaService.getEmpleadoByTareaId(idEmpleado);
+    public ResponseEntity<List<Empleado_Tarea>> getEmpleadoByTareaId(@PathVariable Long idTarea) {
+        return empleado_TareaService.getEmpleadoByTareaId(idTarea);
     }
 
     @PostMapping("/{idEmpleado}/{idTarea}")
