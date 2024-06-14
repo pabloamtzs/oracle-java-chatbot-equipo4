@@ -5,12 +5,14 @@ shell: bash
 
 env:
   variables:
-    image_name: "equipo4-chatbot-springboot"
+    backend_image_name: "equipo4-chatbot-springboot"
+    frontend_image_name: "equipo4-chatbot-frontend"
     appName: "equipo4-chatbot"
     docker_registry: "mx-queretaro-1.ocir.io/axjt4pddcjvb/equipo-4_container_repository"
   exportedVariables:
     - APP_NAME
-    - OCIR_PATH
+    - OCIR_BACKEND_PATH
+    - OCIR_FRONTEND_PATH
     - TAG
 
 steps:
@@ -33,7 +35,8 @@ steps:
     name: "Define OCIR Path"
     timeoutInSeconds: 30
     command: |
-      OCIR_PATH=$docker_registry/$image_name
+      OCIR_BACKEND_PATH=$docker_registry/$backend_image_name
+      OCIR_FRONTEND_PATH=$docker_registry/$frontend_image_name
 
   - type: Command
     name: "Instalar GraalVM Enterprise 22.x Native Image para Java 17"
@@ -148,18 +151,18 @@ steps:
       echo "Archivos de secretos verificados"
 
   - type: Command
-    name: "Construir imagen Docker usando secretos"
+    name: "Construir imagen Docker Backend usando secretos"
     command: |
       echo "Eliminando imagen Docker anterior..."
       image_version=$(date +%Y%m%d%H%M%S)
-      docker rmi -f $image_name || true
+      docker rmi -f $backend_image_name || true
       echo "Construyendo imagen Docker usando secretos..."
       cd Backend/chatbot
       DOCKER_BUILDKIT=1 docker build \
           --secret id=db_user,src=db_user.secret \
           --secret id=db_password,src=db_password.secret \
           --secret id=wallet_secret,src=wallet_secret.tar.gz \
-          -t $image_name .
+          -t $backend_image_name .
       docker images
       echo "Imagen Docker construida"
 
@@ -174,14 +177,29 @@ steps:
       echo "Archivos temporales limpiados"
 
   - type: Command
+    name: "Construir imagen Docker Frontend"
+    command: |
+      echo "Construyendo imagen Docker Frontend..."
+      cd Frontend/oracle-front
+      docker build -t $frontend_image_name .
+      docker images
+      echo "Imagen Docker Frontend construida"
+
+  - type: Command
     name: "Undeploy de la aplicacion"
     command: |
       echo "Eliminando deployment de la aplicacion..."
-      kubectl delete ingress $appName-ingress --namespace=equipo4-chatbot
-      kubectl delete deployment $appName-deployment --namespace=equipo4-chatbot
+      kubectl delete deployment $appName-backend-deployment --namespace=equipo4-chatbot
+      kubectl delete deployment $appName-frontend-deployment --namespace=equipo4-chatbot
+      kubectl delete service $appName-backend-service --namespace=equipo4-chatbot
+      kubectl delete service $appName-frontend-service --namespace=equipo4-chatbot
       echo "Deployment eliminado"
 
 outputArtifacts:
   - name: equipo4-chatbot-springboot
     type: DOCKER_IMAGE
     location: equipo4-chatbot-springboot
+
+  - name: equipo4-chatbot-frontend
+    type: DOCKER_IMAGE
+    location: equipo4-chatbot-frontend

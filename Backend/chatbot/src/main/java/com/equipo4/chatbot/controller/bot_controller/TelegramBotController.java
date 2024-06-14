@@ -63,6 +63,7 @@ public class TelegramBotController extends TelegramLongPollingBot {
             KeyboardRow row = new KeyboardRow();
             row.add(BotLabels.MY_TASKS_LIST.getLabel());
             row.add(BotLabels.ADD_NEW_TASK.getLabel());
+            row.add(BotLabels.SHOW_ALL_TASKS.getLabel());
             // Add the first row to the keyboard
             keyboard.add(row);
 
@@ -124,7 +125,34 @@ public class TelegramBotController extends TelegramLongPollingBot {
         else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
                 || messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
             BotHelper.sendMessageToTelegram(chatId, BotMessages.BYE.getMessage(), this);
-        } // HIDE COMMANDS
+        }// SHOW ALL TASKS
+        else if (messageTextFromTelegram.equals(BotLabels.SHOW_ALL_TASKS.getLabel())) {
+          // Obtener todas las tareas del servicio
+          ResponseEntity<List<Tarea>> allTareas = tareaService.getTareaList();
+          
+          // Crear el mensaje de la tabla
+          StringBuilder tasksTable = new StringBuilder("Lista de todas las tareas:\n\n");
+          tasksTable.append("ID | Descripción | Estado\n");
+          tasksTable.append("---------------------------------\n");
+          
+          List<Tarea> tareaList = allTareas.getBody();
+          for (Tarea tarea : tareaList) {
+              tasksTable.append(tarea.getId_tarea()).append(" | ");
+              tasksTable.append(tarea.getDescripcion_tarea()).append(" | ");
+              tasksTable.append(tarea.getEstado()).append("\n");
+          }
+          
+          // Enviar el mensaje al usuario
+          SendMessage messageToTelegram = new SendMessage();
+          messageToTelegram.setChatId(chatId);
+          messageToTelegram.setText(tasksTable.toString());
+      
+          try {
+              execute(messageToTelegram);
+          } catch (TelegramApiException e) {
+              logger.error(e.getLocalizedMessage(), e);
+          }
+        }// HIDE COMMANDS
         else if (messageTextFromTelegram.equals(BotCommands.TASK_LIST_COMMAND.getCommand())
                 || messageTextFromTelegram.equals(BotLabels.TEAM_TASKS_LIST.getLabel())
                 || messageTextFromTelegram.equals(BotLabels.MY_TASKS_LIST.getLabel())) {

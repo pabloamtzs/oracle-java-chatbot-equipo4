@@ -10,7 +10,8 @@ public enum BotLabels {
   DELETE("Borrar"),
   MY_TASKS_LIST("Mi Lista de Tareas"),
   TEAM_TASKS_LIST("Lista de Tareas del Equipo"),
-  DASH("-");
+  DASH("-"),
+  SHOW_ALL_TASKS("Ver Todas las Tarea");
 
   private String label;
 
