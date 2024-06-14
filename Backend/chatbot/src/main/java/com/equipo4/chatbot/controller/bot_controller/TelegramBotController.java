@@ -179,10 +179,13 @@ public class TelegramBotController extends TelegramLongPollingBot {
         else if (messageTextFromTelegram.equals(BotCommands.HIDE_COMMAND.getCommand())
                     || messageTextFromTelegram.equals(BotLabels.HIDE_MAIN_SCREEN.getLabel())) {
                 BotHelper.sendMessageToTelegram(chatId, BotMessages.BYE.getMessage(), this);
-            } // HIDE COMMANDS
+        } // HIDE COMMANDS
         else if (messageTextFromTelegram.equals(BotLabels.SHOW_ALL_TASKS.getLabel())) {
+          if ("Manager".equals(role)) {
             showAllTasks(chatId);
-          } // SHOW_ALL_TASKS
+          } else {
+              BotHelper.sendMessageToTelegram(chatId, "No tienes permiso para realizar esta acción.", this);
+        }} // SHOW_ALL_TASKS
         else if (messageTextFromTelegram.equals(BotCommands.TASK_LIST_COMMAND.getCommand())
         || messageTextFromTelegram.equals(BotLabels.TEAM_TASKS_LIST.getLabel())
         || messageTextFromTelegram.equals(BotLabels.MY_TASKS_LIST.getLabel())) {
