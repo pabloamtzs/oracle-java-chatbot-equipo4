@@ -1,7 +1,10 @@
 import API_LIST from '../API';
+import authHeader from './auth-header';
 
 const headers = {
   'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'X-Requested-With'
 };
 
 class AuthService {
@@ -31,25 +34,56 @@ class AuthService {
     })
   }
 
-async createUser(email){
-    const response = await fetch(API_LIST + '/empleado/email/' + email, {
-      method: 'GET', headers: headers, mode: 'cors'
-    });
-    if (!response.ok) {
-      throw new Error('user failed');
+  async createUser(email) {
+    try {
+        // Realiza la primera petición para obtener los datos del empleado
+        let response = await fetch(API_LIST + '/empleado/email/' + email, {
+            method: 'GET',
+            headers: headers,
+            mode: 'cors'
+        });
+
+        if (!response.ok) {
+            throw new Error('No se encontró respuesta en la primera petición');
+        }
+
+        let data = await response.json();
+
+        console.log("Empleado obtenido:", data);
+
+        // Realiza la segunda petición usando el id_empleado obtenido de la primera petición
+        response = await fetch(API_LIST + '/miembro-equipo/equipo/' + data.id_empleado, {
+            method: 'GET',
+            headers: authHeader(),
+            mode: 'cors'
+        });
+
+        if (!response.ok) {
+            throw new Error('No se encontró respuesta en la segunda petición');
+        }
+
+        const equipoData = await response.json();
+        console.log("Equipo obtenido:", equipoData[0].id);
+        // Combina los datos de la primera y segunda petición
+        data = { ...data, equipo: equipoData[0].id.id_equipo};
+
+        console.log("Datos completos:", data);
+
+        return data;
+    } catch (error) {
+        console.error('Error en createUser:', error);
+        throw error;
     }
-    const data = await response.json();
-    console.log(data);
-    return data;
-};
+}
+
 
   logout() {
-    localStorage.removeItem("usuario");
+    localStorage.removeItem("perfil");
     localStorage.removeItem("authToken");
   }
 
   getCurrentUser() {
-    return JSON.parse(localStorage.getItem('usuario'));;
+    return JSON.parse(localStorage.getItem('perfil'));;
   }
 
   getAuthToken() {

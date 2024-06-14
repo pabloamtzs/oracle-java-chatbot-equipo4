@@ -6,58 +6,17 @@ import AuthService from "./service/auth.service";
 // import AuthVerify from "./common/auth-verify";
 import EventBus from "./common/EventBus";
 import TodoList from "./components/TodoList/TodoList";
+import Perfil from "./components/profile/Perfil";
 class Home extends Component {
-    constructor(props) {
-        super(props);
-        this.logOut = this.logOut.bind(this);
-    
-        this.state = {
-          showModeratorBoard: false,
-          showAdminBoard: false,
-          currentUser: undefined,
-        };
 
-        //this.postData()
-        //console.log(this.createUser("a00835387@tec.mx"))
-      }
-      
-    componentDidMount() {
-        const user = AuthService.getCurrentUser();
-    
-        if (user) {
-          this.setState({
-            currentUser: user,
-            showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
-            showAdminBoard: user.roles.includes("ROLE_ADMIN"),
-          });
-        }
-        
-        EventBus.on("logout", () => {
-          this.logOut();
-        });
-      }
-
-      
-        componentWillUnmount() {
-            EventBus.remove("logout");
-        }
-
-        logOut() {
-            AuthService.logout();
-            this.setState({
-            showModeratorBoard: false,
-            showAdminBoard: false,
-            currentUser: undefined,
-            });
-        }
-        
       
       render() {
-        const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+        //const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
     
         return (
           <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.1/css/boxicons.min.css"></link>
+            <div className="body-home">
             <nav>
               <div className="sidebar">
                   <div className="logo-details">
@@ -72,29 +31,34 @@ class Home extends Component {
                           </Link>
                       </li>
                       <li>
-                          <a href="https://web.telegram.org/a/#7199106217">
+                          <a href="https://web.telegram.org/a/#7199106217" target="_blank" rel="noopener noreferrer">
                               <i className='bx bxs-message-dots'></i>
                               <span className="link_name">Chatbot</span>
                           </a>
                       </li>
                   </ul>
-                  <div className="profile-details">
-                          <i className='bx bxs-user-circle' ></i>
-                  </div>
+                  <Link to="/home/profile">
+                    <div className="profile-details">
+                            <i className='bx bxs-user-circle' ></i>
+                    </div>
+                  </Link>
                   <a href="/login">
                     <div className="logout-details">
                             <i className='bx bx-log-out'></i>
                     </div>
                   </a>
               </div>
-          </nav>
-              
-          <div className="menu">
-              <Routes>
-                <Route path='/todolist'  element={<TodoList/>} />
-              </Routes>
+            </nav>
+                
+              <div className="background">
               </div>            
-            {/* <AuthVerify logOut={this.logOut}/> */}
+                <Routes>
+                  <Route path='/todolist'  element={<TodoList/>} />
+                  <Route path='/profile'  element={<Perfil/>} />
+                  <Route path='/'  element={<Perfil/>} />
+                </Routes>
+            </div>
+              {/* <AuthVerify logOut={this.logOut}/> */}
           </div>
         );
       }
