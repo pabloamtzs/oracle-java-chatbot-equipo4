@@ -80,10 +80,7 @@ public class Empleado_TareaService{
 
     public ResponseEntity<List<Tarea>> getAllTareaByEmpleadoId(Long idEmpleado) {
         List<Tarea> tareas = empleado_TareaRepository.findById_AllTareas(idEmpleado);
-        if (!tareas.isEmpty()) {
-            return ResponseEntity.ok(tareas);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(tareas);
+
     }
 }
